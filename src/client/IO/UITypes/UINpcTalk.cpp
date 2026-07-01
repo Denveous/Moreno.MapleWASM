@@ -300,7 +300,7 @@ namespace jrc
           scroll_offset(0),
           max_scroll(0)
     {
-        nl::node src = nl::nx::ui["UIWindow2.img"]["UtilDlgEx"];
+        nl::node src = nl::nx::ui["UIWindow.img"]["UtilDlgEx"];
 
         top = src["t"];
         fill = src["c"];
@@ -352,10 +352,6 @@ namespace jrc
         bottom.draw(drawpos);
 
         UIElement::draw(inter);
-
-        speaker.draw({ position + Point<int16_t>(80, 100), true });
-        nametag.draw(position + Point<int16_t>(25, 100));
-        name.draw(position + Point<int16_t>(80, 99));
 
         // Visible content bounds (relative to dialog position).
         int16_t content_top = static_cast<int16_t>(top.height() + TEXT_VERTICAL_PADDING);
@@ -511,7 +507,7 @@ namespace jrc
         const std::string& tx
     )
     {
-        std::string processed_tx = replace_macros(tx);
+        std::string processed_tx = tx;
         dialogue_mode = resolve_dialogue_mode(msgtype, has_navigation_flags);
 
         selections.clear();
@@ -538,20 +534,8 @@ namespace jrc
             text = { Text::A12M, Text::LEFT, Text::DARKGREY, prompttext, TEXT_WIDTH, false };
         }
 
-        if (speakerbyte == 0)
-        {
-            std::string strid = std::to_string(npcid);
-            strid.insert(0, 7 - strid.size(), '0');
-            strid.append(".img");
-            speaker = nl::nx::npc[strid]["stand"]["0"];
-            std::string namestr = nl::nx::string["Npc.img"][std::to_string(npcid)]["name"];
-            name = { Text::A11M, Text::CENTER, Text::WHITE, namestr };
-        }
-        else
-        {
-            speaker = {};
-            name.change_text("");
-        }
+        speaker = {};
+        name.change_text("");
 
         scroll_offset = 0;
 
@@ -667,6 +651,7 @@ namespace jrc
             static_cast<int16_t>(Constants::viewwidth() / 2 - dimension.x() / 2),
             static_cast<int16_t>(Constants::viewheight() / 2 - dimension.y() / 2)
         };
+        active = true;
 
     }
 

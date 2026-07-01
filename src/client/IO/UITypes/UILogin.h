@@ -20,6 +20,7 @@
 
 #include "../Components/Textfield.h"
 
+#include "../../Graphics/Text.h"
 #include "../../Template/BoolPair.h"
 
 namespace jrc
@@ -61,6 +62,8 @@ namespace jrc
         Texture accountbg;
         Texture passwordbg;
         BoolPair<Texture> checkbox;
+        Text accountlabel;
+        Text passwordlabel;
 
         bool saveid;
     };

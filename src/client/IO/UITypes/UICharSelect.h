@@ -83,7 +83,7 @@ namespace jrc
             BT_CHAR0
         };
 
-        static constexpr uint8_t PAGESIZE = 8;
+        static constexpr uint8_t CHAR_PAGE_SIZE = 8;
 
         Sprite emptyslot;
         Charset levelset;

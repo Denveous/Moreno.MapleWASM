@@ -35,6 +35,7 @@ namespace jrc
         base = itemtt["ItemIcon"]["base"];
         cover = itemtt["ItemIcon"]["cover"];
         shade = itemtt["ItemIcon"]["shade"];
+        background = { 260, 120, Geometry::BLACK, 0.75f };
 
         itemid = 0;
     }
@@ -67,6 +68,9 @@ namespace jrc
     {
         if (itemid == 0)
             return;
+
+        ColorBox bg(260, filllength + 26, Geometry::BLACK, 0.75f);
+        bg.draw(pos);
 
         top.draw(pos);
         mid.draw({ pos + Point<int16_t>(0, 13), Point<int16_t>(0, filllength) });

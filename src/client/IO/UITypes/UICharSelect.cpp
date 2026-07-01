@@ -112,7 +112,7 @@ namespace jrc
         buttons[BT_PAGELEFT]   = std::make_unique<MapleButton>(charselect["pageL"],    Point<int16_t>(100, 490));
         buttons[BT_PAGERIGHT]  = std::make_unique<MapleButton>(charselect["pageR"],    Point<int16_t>(490, 490));
 
-        for (uint8_t i = 0; i < PAGESIZE; ++i)
+        for (uint8_t i = 0; i < CHAR_PAGE_SIZE; ++i)
         {
             buttons[BT_CHAR0 + i] = std::make_unique<AreaButton>(
                 Point<int16_t>(105 + (120 * (i % 4)), 170 + (200 * (i > 3))),
@@ -274,17 +274,17 @@ namespace jrc
         }
 
         charcount_relative = charcount_absolute;
-        if (charcount_relative > (page + 1) * PAGESIZE)
+        if (charcount_relative > (page + 1) * CHAR_PAGE_SIZE)
         {
-            charcount_relative = PAGESIZE;
+            charcount_relative = CHAR_PAGE_SIZE;
         }
-        else if (charcount_relative < page * PAGESIZE)
+        else if (charcount_relative < page * CHAR_PAGE_SIZE)
         {
             charcount_relative = 0;
         }
         else
         {
-            charcount_relative -= page * PAGESIZE;
+            charcount_relative -= page * CHAR_PAGE_SIZE;
         }
 
         if (selected_absolute >= charcount_absolute)
@@ -292,16 +292,16 @@ namespace jrc
             selected_absolute = 0;
         }
 
-        selected_relative = selected_absolute % PAGESIZE;
+        selected_relative = selected_absolute % CHAR_PAGE_SIZE;
         if (selected_relative >= charcount_relative)
         {
             selected_relative = 0;
         }
 
-        slots_relative = slots_absolute - page * PAGESIZE;
-        if (slots_relative > PAGESIZE)
+        slots_relative = slots_absolute - page * CHAR_PAGE_SIZE;
+        if (slots_relative > CHAR_PAGE_SIZE)
         {
-            slots_relative = PAGESIZE;
+            slots_relative = CHAR_PAGE_SIZE;
         }
 
         if (charcount_relative < slots_relative)
@@ -322,7 +322,7 @@ namespace jrc
             buttons[BT_DELETECHAR]->set_state(Button::DISABLED);
         }
 
-        for (uint8_t i = 0; i < PAGESIZE; ++i)
+        for (uint8_t i = 0; i < CHAR_PAGE_SIZE; ++i)
         {
             if (i < charcount_relative)
             {
@@ -463,7 +463,7 @@ namespace jrc
             charlooks[selected_absolute].set_stance(Stance::STAND1);
             nametags[selected_absolute].set_selected(false);
 
-            if (selected_relative < PAGESIZE)
+            if (selected_relative < CHAR_PAGE_SIZE)
             {
                 buttons[BT_CHAR0 + selected_relative]->set_state(Button::NORMAL);
             }

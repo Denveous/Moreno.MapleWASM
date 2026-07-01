@@ -172,10 +172,15 @@ namespace jrc
 
         int16_t style = 0;
         bool has_navigation_flags = false;
-        if ((msgtype == 0 || msgtype == 1) && recv.length() >= 2)
+        if (msgtype == 0 && recv.length() >= 2)
         {
             style = recv.read_short();
             has_navigation_flags = true;
+        }
+        else if (msgtype == 1 && recv.length() >= 2)
+        {
+            style = recv.read_short();
+            has_navigation_flags = style == 0 || style == 1 || style == 0x0100 || style == 0x0101;
         }
 
         UI::get().emplace<UINpcTalk>();

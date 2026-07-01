@@ -95,13 +95,14 @@ namespace jrc
         lastpos = 0;
         dragchattop = false;
 
-        nl::node mainbar = nl::nx::ui["StatusBar2.img"]["mainBar"];
+        nl::node mainbar = nl::nx::ui["StatusBar.img"]["base"];
+        nl::node statusbar = nl::nx::ui["StatusBar.img"];
 
-        buttons[BT_OPENCHAT] = std::make_unique<MapleButton>(mainbar["chatOpen"]);
-        buttons[BT_CLOSECHAT] = std::make_unique<MapleButton>(mainbar["chatClose"]);
-        buttons[BT_SCROLLUP] = std::make_unique<MapleButton>(mainbar["scrollUp"]);
-        buttons[BT_SCROLLDOWN] = std::make_unique<MapleButton>(mainbar["scrollDown"]);
-        buttons[BT_CHATTARGETS] = std::make_unique<MapleButton>(mainbar["chatTarget"]["base"]);
+        buttons[BT_OPENCHAT] = std::make_unique<MapleButton>(statusbar["BtShort"]);
+        buttons[BT_CLOSECHAT] = std::make_unique<MapleButton>(statusbar["BtShort"]);
+        buttons[BT_SCROLLUP] = std::make_unique<MapleButton>(statusbar["BtShort"]);
+        buttons[BT_SCROLLDOWN] = std::make_unique<MapleButton>(statusbar["BtShort"]);
+        buttons[BT_CHATTARGETS] = std::make_unique<MapleButton>(statusbar["BtWhisper"]);
 
         chatspace[false] = mainbar["chatSpace"];
         chatspace[true] = mainbar["chatEnter"];
@@ -115,10 +116,10 @@ namespace jrc
         chattargets[CHT_PARTY] = mainbar["chatTarget"]["party"];
         chattargets[CHT_SQUAD] = mainbar["chatTarget"]["expedition"];
 
-        nl::node chat = nl::nx::ui["StatusBar2.img"]["chat"];
+        nl::node chat = nl::nx::ui["StatusBar.img"]["base"];
 
-        tapbar = chat["tapBar"];
-        tapbartop = chat["tapBarOver"];
+        tapbar = chat["chat"];
+        tapbartop = chat["chat"];
 
         chatbox = { 502, 1 + chatrows * CHATROWHEIGHT, Geometry::BLACK, 0.6f };
 

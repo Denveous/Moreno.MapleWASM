@@ -51,8 +51,8 @@ namespace jrc
         iconpositions[Equipslot::MEDAL]    = Point<int16_t>( 10,  58);
         iconpositions[Equipslot::BELT]     = Point<int16_t>( 76, 157);
 
-        nl::node source = nl::nx::ui["UIWindow2.img"]["Equip"]["character"];
-        nl::node petsource = nl::nx::ui["UIWindow2.img"]["Equip"]["pet"];
+        nl::node source = nl::nx::ui["UIWindow.img"]["Equip"]["character"];
+        nl::node petsource = nl::nx::ui["UIWindow.img"]["Equip"]["pet"];
 
         sprites.emplace_back(source["backgrnd"]);
         sprites.emplace_back(source["backgrnd2"]);

@@ -22,6 +22,7 @@
 
 #include "../../Character/ExpTable.h"
 #include "../../Constants.h"
+#include "../../Graphics/Geometry.h"
 
 #include "nlnx/nx.hpp"
 
@@ -34,64 +35,58 @@ namespace jrc
     UIStatusbar::UIStatusbar(const CharStats& st)
         : UIElement(POSITION, DIMENSION), stats(st), chatbar(POSITION)
     {
-        nl::node mainbar = nl::nx::ui["StatusBar2.img"]["mainBar"];
+        nl::node statusbar = nl::nx::ui["StatusBar.img"];
+        nl::node mainbar = statusbar["base"];
 
         sprites.emplace_back(mainbar["backgrnd"]);
-        sprites.emplace_back(mainbar["gaugeBackgrd"]);
-        sprites.emplace_back(mainbar["notice"]);
-        sprites.emplace_back(mainbar["lvBacktrnd"]);
-        sprites.emplace_back(mainbar["lvCover"]);
 
         expbar = {
-            mainbar.resolve("gauge/exp/0"),
-            mainbar.resolve("gauge/exp/1"),
-            mainbar.resolve("gauge/exp/2"),
+            statusbar.resolve("gauge/bar"),
+            statusbar.resolve("gauge/bar"),
+            statusbar.resolve("gauge/bar"),
             308, 0.0f
         };
         hpbar = {
-            mainbar.resolve("gauge/hp/0"),
-            mainbar.resolve("gauge/hp/1"),
-            mainbar.resolve("gauge/hp/2"),
+            statusbar.resolve("gauge/hpFlash/0"),
+            statusbar.resolve("gauge/hpFlash/1"),
+            statusbar.resolve("gauge/hpFlash/0"),
             137, 0.0f
         };
         mpbar = {
-            mainbar.resolve("gauge/mp/0"),
-            mainbar.resolve("gauge/mp/1"),
-            mainbar.resolve("gauge/mp/2"),
+            statusbar.resolve("gauge/mpFlash/0"),
+            statusbar.resolve("gauge/mpFlash/1"),
+            statusbar.resolve("gauge/mpFlash/0"),
             137, 0.0f
         };
 
-        statset   = { mainbar["gauge"]["number"], Charset::RIGHT };
-        levelset  = { mainbar["lvNumber"],        Charset::LEFT  };
+        statset   = { nl::nx::ui["Basic.img"]["Number"], Charset::RIGHT };
+        levelset  = { nl::nx::ui["Basic.img"]["Number"], Charset::LEFT  };
 
         joblabel  = { Text::A11M, Text::LEFT, Text::YELLOW };
         namelabel = { Text::A13M, Text::LEFT, Text::WHITE  };
 
-        buttons[BT_WHISPER]   = std::make_unique<MapleButton>(mainbar["BtChat"]);
-        buttons[BT_CALLGM]    = std::make_unique<MapleButton>(mainbar["BtClaim"]);
+        buttons[BT_WHISPER]   = std::make_unique<MapleButton>(statusbar["BtWhisper"], 518, 45);
+        buttons[BT_CALLGM]    = std::make_unique<MapleButton>(statusbar["BtClaim"], 533, 45);
 
-        buttons[BT_CASHSHOP]  = std::make_unique<MapleButton>(mainbar["BtCashShop"]);
-        buttons[BT_TRADE]     = std::make_unique<MapleButton>(mainbar["BtMTS"]);
-        buttons[BT_MENU]      = std::make_unique<MapleButton>(mainbar["BtMenu"]);
-        buttons[BT_OPTIONS]   = std::make_unique<MapleButton>(mainbar["BtSystem"]);
+        buttons[BT_CASHSHOP]  = std::make_unique<MapleButton>(statusbar["BtShop"], 574, 28);
+        buttons[BT_TRADE]     = std::make_unique<MapleButton>(statusbar["BtNPT"], 632, 28);
+        buttons[BT_MENU]      = std::make_unique<MapleButton>(statusbar["BtMenu"], 690, 28);
+        buttons[BT_OPTIONS]   = std::make_unique<MapleButton>(statusbar["BtShort"], 748, 28);
 
-        buttons[BT_CHARACTER] = std::make_unique<MapleButton>(mainbar["BtCharacter"]);
-        buttons[BT_STATS]     = std::make_unique<MapleButton>(mainbar["BtStat"]);
-        buttons[BT_QUEST]     = std::make_unique<MapleButton>(mainbar["BtQuest"]);
-        buttons[BT_INVENTORY] = std::make_unique<MapleButton>(mainbar["BtInven"]);
-        buttons[BT_EQUIPS]    = std::make_unique<MapleButton>(mainbar["BtEquip"]);
-        buttons[BT_SKILL]     = std::make_unique<MapleButton>(mainbar["BtSkill"]);
+        buttons[BT_CHARACTER] = std::make_unique<MapleButton>(statusbar["StatKey"], 574, 6);
+        buttons[BT_STATS]     = std::make_unique<MapleButton>(statusbar["StatKey"], 574, 6);
+        buttons[BT_QUEST]     = std::make_unique<MapleButton>(statusbar["KeySet"], 604, 6);
+        buttons[BT_INVENTORY] = std::make_unique<MapleButton>(statusbar["InvenKey"], 634, 6);
+        buttons[BT_EQUIPS]    = std::make_unique<MapleButton>(statusbar["EquipKey"], 664, 6);
+        buttons[BT_SKILL]     = std::make_unique<MapleButton>(statusbar["SkillKey"], 694, 6);
 
         update_layout_position();
+        active = true;
     }
 
     void UIStatusbar::draw(float alpha) const
     {
         UIElement::draw(alpha);
-
-        expbar.draw(position + Point<int16_t>(-261, -15));
-        hpbar.draw(position + Point<int16_t>(-261, -31));
-        mpbar.draw(position + Point<int16_t>(-90, -31));
 
         int16_t level = stats.get_stat(Maplestat::LEVEL);
         int16_t hp    = stats.get_stat(Maplestat::HP);
@@ -100,26 +95,33 @@ namespace jrc
         int32_t maxmp = stats.get_total(Equipstat::MP);
         int64_t exp   = stats.get_exp();
 
+        ColorBox hpfill(static_cast<int16_t>(109 * gethppercent()), 8, Geometry::HPBAR_DARKRED, 0.9f);
+        ColorBox mpfill(static_cast<int16_t>(109 * getmppercent()), 8, Geometry::HPBAR_GREEN, 0.9f);
+        ColorBox expfill(static_cast<int16_t>(340 * getexppercent()), 6, Geometry::HPBAR_LIGHTGREEN, 0.9f);
+        hpfill.draw(position + Point<int16_t>(205, 42));
+        mpfill.draw(position + Point<int16_t>(376, 42));
+        expfill.draw(position + Point<int16_t>(205, 58));
+
         std::string expstring = std::to_string(100 * getexppercent());
         statset.draw(
             std::to_string(exp) + "[" + expstring.substr(0, expstring.find('.') + 3) + "%]",
-            position + Point<int16_t>(47, -13)
+            position + Point<int16_t>(512, 47)
         );
         statset.draw(
             "[" + std::to_string(hp) + "/" + std::to_string(maxhp) + "]",
-            position + Point<int16_t>(-124, -29)
+            position + Point<int16_t>(341, 27)
         );
         statset.draw(
             "[" + std::to_string(mp) + "/" + std::to_string(maxmp) + "]",
-            position + Point<int16_t>(47, -29)
+            position + Point<int16_t>(512, 27)
         );
         levelset.draw(
             std::to_string(level),
-            position + Point<int16_t>(-480, -24)
+            position + Point<int16_t>(32, 32)
         );
 
-        joblabel.draw(position + Point<int16_t>(-435, -21));
-        namelabel.draw(position + Point<int16_t>(-435, -36));
+        joblabel.draw(position + Point<int16_t>(78, 44));
+        namelabel.draw(position + Point<int16_t>(78, 29));
 
         chatbar.draw(alpha);
     }
@@ -148,7 +150,7 @@ namespace jrc
     {
         position = {
             POSITION.x(),
-            static_cast<int16_t>(Constants::viewheight() - Constants::VIEWYOFFSET)
+            static_cast<int16_t>(Constants::viewheight() - DIMENSION.y())
         };
         chatbar.set_position(position);
     }
@@ -177,8 +179,8 @@ namespace jrc
     bool UIStatusbar::is_in_range(Point<int16_t> cursorpos) const
     {
         Rectangle<int16_t> bounds(
-            position - Point<int16_t>(512, 84),
-            position - Point<int16_t>(512, 84) + dimension
+            position,
+            position + dimension
         );
 
         return bounds.contains(cursorpos) || chatbar.is_in_range(cursorpos);

@@ -138,9 +138,9 @@ namespace jrc
             reactors.draw(id, viewx, viewy, alpha);
             npcs.draw(id, viewx, viewy, alpha);
             mobs.draw(id, viewx, viewy, alpha);
+            drops.draw(id, viewx, viewy, alpha);
             chars.draw(id, viewx, viewy, alpha);
             player.draw(id, viewx, viewy, alpha);
-            drops.draw(id, viewx, viewy, alpha);
         }
         combat.draw(viewx, viewy, alpha);
         portals.draw(viewpos, alpha);

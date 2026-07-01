@@ -30,7 +30,7 @@ namespace jrc
         : parent(Tooltip::NONE), fillwidth(0), fillheight(0)
     {
         nl::node frame_src = nl::nx::ui["UIToolTip.img"]["Item"]["Frame2"];
-        nl::node world_map_src = nl::nx::ui["UIWindow2.img"]["ToolTip"]["WorldMap"];
+        nl::node world_map_src = nl::nx::ui["UIWindow.img"]["ToolTip"]["WorldMap"];
 
         frame = frame_src;
         cover = frame_src["cover"];

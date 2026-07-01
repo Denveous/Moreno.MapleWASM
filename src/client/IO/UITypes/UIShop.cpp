@@ -36,8 +36,8 @@ namespace jrc
     UIShop::UIShop(const CharLook& in_charlook, const Inventory& in_inventory)
         : charlook(in_charlook), inventory(in_inventory), last_cursor_pos()
     {
-        nl::node src  = nl::nx::ui["UIWindow2.img"]["Shop"];
-        nl::node src2 = nl::nx::ui["UIWindow2.img"]["Shop2"];
+        nl::node src  = nl::nx::ui["UIWindow.img"]["Shop"];
+        nl::node src2 = nl::nx::ui["UIWindow.img"]["Shop2"];
 
         sprites.emplace_back(src["backgrnd"]);
         sprites.emplace_back(src["backgrnd2"]);

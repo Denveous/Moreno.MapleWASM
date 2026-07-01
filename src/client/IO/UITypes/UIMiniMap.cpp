@@ -72,7 +72,7 @@ namespace jrc
             position.set_y(ScrollingNotice::HEIGHT);
         }
 
-        nl::node ui_window = nl::nx::ui["UIWindow2.img"];
+        nl::node ui_window = nl::nx::ui["UIWindow.img"];
 
         minimap_node = ui_window["MiniMap"];
         list_npc_node = minimap_node["ListNpc"];
@@ -82,12 +82,12 @@ namespace jrc
             ui_window["MiniMapSimpleMode"]["DefaultHelper"] :
             map_helper_node["minimap"];
 
-        buttons[BT_MIN] = std::make_unique<MapleButton>(minimap_node["BtMin"], Point<int16_t>(195, -6));
-        buttons[BT_MAX] = std::make_unique<MapleButton>(minimap_node["BtMax"], Point<int16_t>(209, -6));
-        buttons[BT_SMALL] = std::make_unique<MapleButton>(minimap_node["BtSmall"], Point<int16_t>(223, -6));
-        buttons[BT_BIG] = std::make_unique<MapleButton>(minimap_node["BtBig"], Point<int16_t>(223, -6));
+        buttons[BT_MIN] = std::make_unique<MapleButton>(minimap_node["BtMap"], Point<int16_t>(195, -6));
+        buttons[BT_MAX] = std::make_unique<MapleButton>(minimap_node["BtMap"], Point<int16_t>(209, -6));
+        buttons[BT_SMALL] = std::make_unique<MapleButton>(minimap_node["BtMap"], Point<int16_t>(223, -6));
+        buttons[BT_BIG] = std::make_unique<MapleButton>(minimap_node["BtMap"], Point<int16_t>(223, -6));
         buttons[BT_MAP] = std::make_unique<MapleButton>(minimap_node["BtMap"], Point<int16_t>(237, -6));
-        buttons[BT_NPC] = std::make_unique<MapleButton>(minimap_node["BtNpc"], Point<int16_t>(276, -6));
+        buttons[BT_NPC] = std::make_unique<MapleButton>(minimap_node["BtMap"], Point<int16_t>(276, -6));
 
         player_marker = Animation(marker_node["user"]);
         selected_marker = Animation(minimap_node["iconNpc"]);
@@ -174,22 +174,10 @@ namespace jrc
             mapid = current_mapid;
             map_node = NxHelper::Map::get_map_node_name(mapid);
 
-            nl::node town = map_node["info"]["town"];
             nl::node mini_map = map_node["miniMap"];
             has_map = static_cast<bool>(mini_map);
 
-            if (!has_map)
-            {
-                type = MIN;
-            }
-            else if (town && town.get_bool())
-            {
-                type = MAX;
-            }
-            else
-            {
-                type = user_type;
-            }
+            type = MIN;
 
             int32_t mag = mini_map ? static_cast<int32_t>(mini_map["mag"]) : 0;
             scale = 1 << std::max(0, mag);
@@ -375,8 +363,8 @@ namespace jrc
             return;
         }
 
-        type = type < MAX ? type + 1 : MIN;
-        user_type = type;
+        type = MIN;
+        user_type = MIN;
         Setting<MiniMapType>::get().save(static_cast<uint8_t>(user_type));
         toggle_buttons();
     }
@@ -434,8 +422,8 @@ namespace jrc
         if (type == MIN)
         {
             buttons[BT_MAP]->set_active(true);
-            buttons[BT_MAX]->set_active(true);
-            buttons[BT_MIN]->set_active(true);
+            buttons[BT_MAX]->set_active(false);
+            buttons[BT_MIN]->set_active(false);
             buttons[BT_NPC]->set_active(false);
             buttons[BT_SMALL]->set_active(false);
             buttons[BT_BIG]->set_active(false);
@@ -444,11 +432,6 @@ namespace jrc
             buttons[BT_MAX]->set_state(has_map ? Button::NORMAL : Button::DISABLED);
 
             bt_min_x = combined_text_width + 11;
-
-            buttons[BT_MIN]->set_position(Point<int16_t>(bt_min_x, BTN_MIN_Y));
-            bt_min_x += bt_min_width;
-            buttons[BT_MAX]->set_position(Point<int16_t>(bt_min_x, BTN_MIN_Y));
-            bt_min_x += bt_max_width;
             buttons[BT_MAP]->set_position(Point<int16_t>(bt_min_x, BTN_MIN_Y));
 
             min_dimensions = Point<int16_t>(bt_min_x + bt_map_width + 7, 20);

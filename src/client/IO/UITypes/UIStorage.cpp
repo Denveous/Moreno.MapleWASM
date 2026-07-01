@@ -81,7 +81,7 @@ namespace jrc
           slots(0),
           npcid(0)
     {
-        nl::node src = nl::nx::ui["UIWindow2.img"]["Trunk"];
+        nl::node src = nl::nx::ui["UIWindow.img"]["Trunk"];
 
         sprites.emplace_back(src["backgrnd"]);
         sprites.emplace_back(src["backgrnd2"]);
@@ -127,9 +127,9 @@ namespace jrc
 
         buttons[button_by_tab(tab)]->set_state(Button::PRESSED);
 
-        selection = nl::nx::ui["UIWindow2.img"]["Shop"]["select"];
+        selection = nl::nx::ui["UIWindow.img"]["Shop"]["select"];
         disabled_slot = src["disabled"];
-        meso_icon = nl::nx::ui["UIWindow2.img"]["Shop"]["meso"];
+        meso_icon = nl::nx::ui["UIWindow.img"]["Shop"]["meso"];
 
         storage_mesolabel = { Text::A11M, Text::RIGHT, Text::LIGHTGREY };
         player_mesolabel = { Text::A11M, Text::RIGHT, Text::LIGHTGREY };

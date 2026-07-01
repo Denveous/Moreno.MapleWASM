@@ -116,6 +116,13 @@
                 return canvas;
             })(),
 
+            locateFile: function (path) {
+                if (path === 'JourneyClient.wasm') {
+                    return '/_maple/build/JourneyClient.wasm?v=20260701-1028ui';
+                }
+                return path;
+            },
+
             // Disable stdin to prevent annoying prompt() popups
             preRun: [function () {
                 function stdin() {
@@ -178,7 +185,7 @@
                     const lazyConfigKeys = [
                         'AssetsServerIP', 'AssetsServerPort',
                         'MapleStoryServerIp', 'MapleStoryServerPort',
-                        'ProxyIP', 'ProxyPort', 'AssetsServerProtocol'
+                        'ProxyIP', 'ProxyPort', 'AssetsServerProtocol', 'ASSETS_WS_URL'
                     ];
 
                     lazyConfigKeys.forEach(key => {
@@ -202,7 +209,7 @@
 
         function loadWasmClient() {
             const script = document.createElement('script');
-            script.src = '/build/JourneyClient.js';
+            script.src = '/_maple/build/JourneyClient.js?v=20260701-1028ui';
             script.async = true;
             document.body.appendChild(script);
         }

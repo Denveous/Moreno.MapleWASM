@@ -35,7 +35,7 @@ namespace jrc
           search_text_dim(82, 14)
     {
         nl::node close = nl::nx::ui["Basic.img"]["BtClose3"];
-        nl::node world_map = nl::nx::ui["UIWindow2.img"]["WorldMap"];
+        nl::node world_map = nl::nx::ui["UIWindow.img"]["WorldMap"];
         nl::node world_map_search = world_map["WorldMapSearch"];
         nl::node border = world_map["Border"]["0"];
         nl::node background = world_map_search["backgrnd"];

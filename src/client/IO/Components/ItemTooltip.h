@@ -19,6 +19,7 @@
 #include "Tooltip.h"
 #include "Charset.h"
 
+#include "../../Graphics/Geometry.h"
 #include "../../Graphics/Text.h"
 
 namespace jrc
@@ -46,5 +47,6 @@ namespace jrc
         Texture base;
         Texture cover;
         Texture shade;
+        ColorBox background;
     };
 }

@@ -121,18 +121,16 @@ namespace
 			std::string proxy_ip = jrc::Setting<jrc::ProxyIP>::get().load();
 			std::string proxy_port = jrc::Setting<jrc::ProxyPort>::get().load();
 			
-			if (!proxy_ip.empty()) {
+			if (proxy_ip.rfind("ws://", 0) == 0 || proxy_ip.rfind("wss://", 0) == 0) {
+				ws_url = proxy_ip;
+			} else if (!proxy_ip.empty()) {
 				ws_url += proxy_ip;
+				ws_url += ":";
+				ws_url += !proxy_port.empty() ? proxy_port : WEB_SOCK_PORT;
 			} else {
-				ws_url += jrc::getBrowserHostname(); // Dynamic hostname from browser
-			}
-			
-			ws_url += ":";
-			
-			if (!proxy_port.empty()) {
-				ws_url += proxy_port;
-			} else {
-				ws_url += WEB_SOCK_PORT; // Proxy server port fallback
+				ws_url += jrc::getBrowserHostname();
+				ws_url += ":";
+				ws_url += !proxy_port.empty() ? proxy_port : WEB_SOCK_PORT;
 			}
 
 			jrc::Console::get().print("Connecting to WebSocket proxy: " + ws_url);

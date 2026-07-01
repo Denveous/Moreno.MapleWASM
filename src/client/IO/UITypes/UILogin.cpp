@@ -39,6 +39,7 @@ namespace jrc
         nl::node title  = nl::nx::ui["Login.img"]["Title"];
         nl::node common = nl::nx::ui["Login.img"]["Common"];
         nl::node title_new = nl::nx::ui["Login.img"]["Title_new"];
+        nl::node obj_title = nl::nx::map["Obj"]["login.img"]["Title"];
 
         // Compatibility: some UI.nx variants do not have Title/11, Title/35, Title/Logo.
         if (back["11"])
@@ -53,11 +54,7 @@ namespace jrc
         const bool has_legacy_form = static_cast<bool>(title["signboard"]) &&
             static_cast<bool>(common["frame"]);
 
-        if (title["11"])
-        {
-            sprites.emplace_back(title["11"], Point<int16_t>(410, 300));
-        }
-        else if (title_new["backgrd"] && !has_legacy_form)
+        if (title_new["backgrd"] && !has_legacy_form)
         {
             sprites.emplace_back(title_new["backgrd"], Point<int16_t>(410, 300));
         }
@@ -73,7 +70,7 @@ namespace jrc
         }
         else if (title["MSTitle"])
         {
-            sprites.emplace_back(title["MSTitle"], Point<int16_t>(410, 130));
+            sprites.emplace_back(title["MSTitle"], Point<int16_t>(250, 62));
         }
 
         if (title["signboard"])
@@ -83,6 +80,10 @@ namespace jrc
         if (common["frame"])
         {
             sprites.emplace_back(common["frame"], Point<int16_t>(400, 290));
+        }
+        if (obj_title["signboard"]["0"])
+        {
+            sprites.emplace_back(obj_title["signboard"]["0"], Point<int16_t>(500, 360));
         }
 
         const bool has_legacy_title_nodes = static_cast<bool>(title["11"]) ||
@@ -105,13 +106,13 @@ namespace jrc
             sprites.push_back(sprite);
         }
 
-        buttons[BT_LOGIN]    = std::make_unique<MapleButton>(title["BtLogin"],       Point<int16_t>(475, 248));
-        buttons[BT_REGISTER] = std::make_unique<MapleButton>(title["BtNew"],         Point<int16_t>(309, 320));
-        buttons[BT_HOMEPAGE] = std::make_unique<MapleButton>(title["BtHomePage"],    Point<int16_t>(382, 320));
-        buttons[BT_PASSLOST] = std::make_unique<MapleButton>(title["BtPasswdLost"],  Point<int16_t>(470, 300));
-        buttons[BT_QUIT]     = std::make_unique<MapleButton>(title["BtQuit"],        Point<int16_t>(455, 320));
-        buttons[BT_IDLOST]   = std::make_unique<MapleButton>(title["BtLoginIDLost"], Point<int16_t>(395, 300));
-        buttons[BT_SAVEID]   = std::make_unique<MapleButton>(title["BtLoginIDSave"], Point<int16_t>(325, 300));
+        buttons[BT_LOGIN]    = std::make_unique<MapleButton>(title["BtLogin"],       Point<int16_t>(584, 269));
+        buttons[BT_REGISTER] = std::make_unique<MapleButton>(title["BtNew"],         Point<int16_t>(400, 383));
+        buttons[BT_HOMEPAGE] = std::make_unique<MapleButton>(title["BtHomePage"],    Point<int16_t>(493, 383));
+        buttons[BT_PASSLOST] = std::make_unique<MapleButton>(title["BtPasswdLost"],  Point<int16_t>(596, 336));
+        buttons[BT_QUIT]     = std::make_unique<MapleButton>(title["BtQuit"],        Point<int16_t>(587, 383));
+        buttons[BT_IDLOST]   = std::make_unique<MapleButton>(title["BtLoginIDLost"], Point<int16_t>(510, 336));
+        buttons[BT_SAVEID]   = std::make_unique<MapleButton>(title["BtLoginIDSave"], Point<int16_t>(398, 336));
 
         checkbox[false] = title["check"]["0"];
         checkbox[true]  = title["check"]["1"];
@@ -120,7 +121,7 @@ namespace jrc
             Text::A13M,
             Text::LEFT,
             Text::WHITE,
-            { {315, 249}, {465, 273} },
+            { {436, 262}, {612, 283} },
             12
         };
         account.set_key_callback(KeyAction::TAB, [&]{
@@ -136,7 +137,7 @@ namespace jrc
             Text::A13M,
             Text::LEFT,
             Text::WHITE,
-            { {315, 275}, {465, 299} },
+            { {436, 296}, {612, 317} },
             12
         };
         password.set_key_callback(KeyAction::TAB, [&] {
@@ -148,6 +149,8 @@ namespace jrc
         });
         password.set_cryptchar('*');
         passwordbg = title["PW"];
+        accountlabel = { Text::A11M, Text::LEFT, Text::WHITE, "" };
+        passwordlabel = { Text::A11M, Text::LEFT, Text::WHITE, "" };
 
         saveid = Setting<SaveLogin>::get().load();
         if (saveid)
@@ -167,22 +170,14 @@ namespace jrc
 
     void UILogin::draw(float alpha) const
     {
-        UIElement::draw(alpha);
+        draw_sprites(alpha);
 
         account.draw(position);
         password.draw(position);
 
-        if (account.get_state() == Textfield::NORMAL && account.empty())
-        {
-            accountbg.draw({ position + Point<int16_t>(310, 249) });
-        }
+        checkbox[saveid].draw({ position + Point<int16_t>(378, 336) });
 
-        if (password.get_state() == Textfield::NORMAL && password.empty())
-        {
-            passwordbg.draw({ position + Point<int16_t>(310, 275) });
-        }
-
-        checkbox[saveid].draw({ position + Point<int16_t>(313, 304) });
+        draw_buttons(alpha);
     }
 
     void UILogin::update()
@@ -212,6 +207,7 @@ namespace jrc
         switch (id)
         {
         case BT_LOGIN:
+        case BT_REGISTER:
             login();
             return Button::NORMAL;
         case BT_QUIT:

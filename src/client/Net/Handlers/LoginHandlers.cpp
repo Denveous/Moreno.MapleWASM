@@ -124,9 +124,15 @@ namespace jrc
         UI::get().remove(UIElement::LOGIN);
         UI::get().remove(UIElement::CHARSELECT);
 
-        // Add the world selection screen to the ui.
-        UI::get().emplace<UIWorldSelect>(worlds, worldcount);
-        UI::get().enable();
+        if (worldcount > 0)
+        {
+            CharlistRequestPacket(0, 0).dispatch();
+        }
+        else
+        {
+            UI::get().emplace<UILoginNotice>(UILoginNotice::UNKNOWN_ERROR);
+            UI::get().enable();
+        }
     }
 
 

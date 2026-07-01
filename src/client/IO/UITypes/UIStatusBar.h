@@ -93,8 +93,8 @@ namespace jrc
             BT_SKILL
         };
 
-        static constexpr Point<int16_t> POSITION  = {  512, 590 };
-        static constexpr Point<int16_t> DIMENSION = { 1366, 80  };
+        static constexpr Point<int16_t> POSITION  = { 0, 529 };
+        static constexpr Point<int16_t> DIMENSION = { 800, 71 };
         static constexpr time_t MESSAGE_COOLDOWN = 1'000;
 
         const CharStats& stats;

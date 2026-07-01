@@ -33,11 +33,9 @@ namespace jrc
     UIItemInventory::UIItemInventory(const Inventory& invent)
         : UIDragElement<PosINV>(Point<int16_t>(172, 20)), inventory(invent) {
 
-        nl::node src = nl::nx::ui["UIWindow2.img"]["Item"];
+        nl::node src = nl::nx::ui["UIWindow.img"]["Item"];
 
         sprites.emplace_back(src["backgrnd"]);
-        sprites.emplace_back(src["backgrnd2"]);
-        sprites.emplace_back(src["backgrnd3"]);
 
         newitemslot = src["New"]["inventory"];
         newitemtab = src["New"]["Tab0"];
@@ -53,14 +51,14 @@ namespace jrc
         buttons[BT_TAB_CASH]= std::make_unique<TwoSpriteButton>(tabdis["4"], taben["4"], Point<int16_t>(-1, -4));
 
         buttons[BT_DROPMESO]= std::make_unique<MapleButton>(src["BtCoin"]);
-        buttons[BT_POINTS]= std::make_unique<MapleButton>(src["BtPoint0"]);
+        buttons[BT_POINTS]= std::make_unique<MapleButton>(src["BtCoin"]);
         buttons[BT_GATHER]= std::make_unique<MapleButton>(src["BtGather"]);
         buttons[BT_SORT]= std::make_unique<MapleButton>(src["BtSort"]);
         buttons[BT_EXPAND]= std::make_unique<MapleButton>(src["BtFull"]);
-        buttons[BT_ITEMPOT]= std::make_unique<MapleButton>(src["BtPot3"]);
-        buttons[BT_UPGRADE]= std::make_unique<MapleButton>(src["BtUpgrade3"]);
-        buttons[BT_MAGNIFY]= std::make_unique<MapleButton>(src["BtAppraise3"]);
-        buttons[BT_BITCASE]= std::make_unique<MapleButton>(src["BtBits3"]);
+        buttons[BT_ITEMPOT]= std::make_unique<MapleButton>(src["BtFull"]);
+        buttons[BT_UPGRADE]= std::make_unique<MapleButton>(src["BtFull"]);
+        buttons[BT_MAGNIFY]= std::make_unique<MapleButton>(src["BtFull"]);
+        buttons[BT_BITCASE]= std::make_unique<MapleButton>(src["BtFull"]);
 
         tab = InventoryType::EQUIP;
         slotrange.first = 1;
@@ -69,6 +67,11 @@ namespace jrc
         newslot = 0;
 
         buttons[BT_SORT]->set_active(false);
+        buttons[BT_POINTS]->set_active(false);
+        buttons[BT_ITEMPOT]->set_active(false);
+        buttons[BT_UPGRADE]->set_active(false);
+        buttons[BT_MAGNIFY]->set_active(false);
+        buttons[BT_BITCASE]->set_active(false);
         buttons[button_by_tab(tab)]->set_state(Button::PRESSED);
 
         mesolabel = { Text::A11M, Text::RIGHT, Text::LIGHTGREY };
@@ -86,7 +89,7 @@ namespace jrc
             }
         } };
 
-        dimension = { 172, 335 };
+        dimension = { 175, 289 };
         active = true;
 
         load_icons();

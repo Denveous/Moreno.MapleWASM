@@ -188,7 +188,7 @@ namespace jrc
           offset(0),
           grabbing(false)
     {
-        nl::node main = nl::nx::ui["UIWindow2.img"]["Skill"]["main"];
+        nl::node main = nl::nx::ui["UIWindow.img"]["Skill"]["main"];
 
         sprites.emplace_back(main["backgrnd"]);
         sprites.emplace_back(main["backgrnd2"]);
